@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import { AppDataSource } from '../data-source';
 import { User } from '../entities/User';
 
-// Middleware untuk memeriksa token JWT
 export const authenticateToken = async (
   req: Request,
   res: Response,
@@ -14,7 +13,7 @@ export const authenticateToken = async (
   // Periksa apakah header Authorization ada
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     res.status(401).json({ message: 'No token provided' });
-    return; // Hentikan eksekusi dengan return tanpa nilai
+    return;
   }
 
   const token = authHeader.split(' ')[1];
@@ -42,6 +41,5 @@ export const authenticateToken = async (
       console.error('JWT Verification Error:', error);
     }
     res.status(403).json({ message: 'Invalid or expired token' });
-    return;
   }
 };
