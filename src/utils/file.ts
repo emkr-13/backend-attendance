@@ -1,12 +1,16 @@
 import multer from "multer";
-import { v4 as uuidv4 } from "uuid";
 import path from "path";
 import fs from "fs/promises";
 
 // Konfigurasi penyimpanan file
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
-    const userId = req.body.user.id;
+    const userId = req.body.user?.id; // Pastikan userId tersedia
+    if (!userId) {
+      cb(new Error("User ID not found in request body"), "");
+      return;
+    }
+
     const uploadDir = `photo_employee/${userId}`;
 
     // Buat folder jika belum ada
@@ -19,7 +23,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const timestamp = new Date().toISOString().replace(/:/g, "-");
-    const userId = req.body.user.id;
+    const userId = req.body.user?.id; // Pastikan userId tersedia
     const ext = path.extname(file.originalname);
     const filename = `${timestamp}_${userId}${ext}`;
     cb(null, filename);

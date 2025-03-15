@@ -8,6 +8,7 @@ export const sendSuccessResponse = (
 ) => {
   res.status(statusCode).json({
     success: true,
+    code:statusCode,
     data,
   });
 };
@@ -20,6 +21,7 @@ export const sendErrorResponse = (
 ) => {
   res.status(statusCode).json({
     success: false,
+    code:statusCode,
     message,
   });
 };

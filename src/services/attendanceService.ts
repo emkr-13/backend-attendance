@@ -7,17 +7,18 @@ export const recordAttendance = async (
   userId: string,
   location: string,
   ipAddress: string,
-  photoUrl: string // Simpan URL bukan base64
+  photoUrl: string 
 ) => {
   const userRepository = AppDataSource.getRepository(User);
   const user = await userRepository.findOneBy({ id: userId });
+  console.log('user', user);
   if (!user) throw new Error('User not found');
 
   const attendanceRepository = AppDataSource.getRepository(Attendance);
   const newAttendance = attendanceRepository.create({
     location,
     ipAddress,
-    photo: photoUrl, // Simpan URL
+    photo: photoUrl, 
     user,
   });
 
