@@ -5,42 +5,6 @@ import { upload } from "../utils/file"; // Middleware multer
 
 const router = express.Router();
 
-/**
- * @swagger
- * /api/attendance:
- *   post:
- *     summary: Record attendance with photo upload
- *     tags:
- *       - Attendance
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               location:
- *                 type: string
- *               ipAddress:
- *                 type: string
- *               photo:
- *                 type: string
- *                 format: binary
- *     responses:
- *       200:
- *         description: Attendance recorded successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *       400:
- *         description: Bad request or invalid data
- */
 router.post(
   "/",
   upload.single("photo"),
@@ -61,39 +25,6 @@ router.post(
   }
 );
 
-/**
- * @swagger
- * /api/attendance:
- *   get:
- *     summary: Get attendance report for the authenticated user
- *     tags:
- *       - Attendance
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Attendance report retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: string
- *                   location:
- *                     type: string
- *                   ipAddress:
- *                     type: string
- *                   photo:
- *                     type: string
- *                   createdAt:
- *                     type: string
- *                     format: date-time
- *       400:
- *         description: Bad request or user not found
- */
 router.get("/", async (req, res) => {
   try {
     const userId = req.body.user.id;
