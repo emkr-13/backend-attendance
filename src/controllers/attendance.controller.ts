@@ -9,7 +9,8 @@ const router = express.Router();
 // Record Attendance
 router.post("/attendance", async (req, res) => {
   try {
-    const { userId, location, ipAddress, photo } = req.body;
+    const userId = req.body.user.id;
+    const { location, ipAddress, photo } = req.body;
     const result = await recordAttendance(userId, location, ipAddress, photo);
     res.json(result);
   } catch (error) {
@@ -22,9 +23,9 @@ router.post("/attendance", async (req, res) => {
 });
 
 // Get Attendance Report
-router.get("/attendance/:userId", async (req, res) => {
+router.get("/attendance/", async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.body.user.id;
     const attendances = await getAttendanceReport(userId);
     res.json(attendances);
   } catch (error) {

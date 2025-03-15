@@ -7,6 +7,6 @@ const router = express.Router();
 router.post('/attendance', recordAttendance);
 
 // Get Attendance Report
-router.get('/attendance/:userId',  getAttendanceReport);
+router.get('/attendance/',  getAttendanceReport);
 
 export default router;
