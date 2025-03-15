@@ -1,38 +1,43 @@
-import express from "express";
-import {
-  recordAttendance,
-  getAttendanceReport,
-} from "../services/attendanceService";
+import express from 'express';
+import { recordAttendance, getAttendanceReport } from '../services/attendanceService';
+import { sendSuccessResponse, sendErrorResponse } from '../utils/response';
+import { upload } from '../utils/file'; // Import multer config
 
 const router = express.Router();
 
-// Record Attendance
-router.post("/attendance", async (req, res) => {
-  try {
-    const userId = req.body.user.id;
-    const { location, ipAddress, photo } = req.body;
-    const result = await recordAttendance(userId, location, ipAddress, photo);
-    res.json(result);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(400).json({ message: error.message });
-    } else {
-      res.status(400).json({ message: "An unknown error occurred" });
+// Record Attendance dengan upload foto
+router.post(
+  '/attendance',
+  upload.single('photo'), // Middleware untuk upload file
+  async (req: express.Request, res: express.Response) => {
+    try {
+      const userId = req.body.user.id;
+      const { location, ipAddress } = req.body;
+      const photoUrl = req.file?.path || ''; // Ambil path file dari multer
+
+      const result = await recordAttendance(userId, location, ipAddress, photoUrl);
+      sendSuccessResponse(res, result, 200);
+    } catch (error) {
+      if (error instanceof Error) {
+        sendErrorResponse(res, error.message);
+      } else {
+        sendErrorResponse(res, 'An unknown error occurred');
+      }
     }
   }
-});
+);
 
 // Get Attendance Report
-router.get("/attendance/", async (req, res) => {
+router.get('/attendance', async (req, res) => {
   try {
     const userId = req.body.user.id;
     const attendances = await getAttendanceReport(userId);
-    res.json(attendances);
+    sendSuccessResponse(res, attendances, 200);
   } catch (error) {
     if (error instanceof Error) {
-      res.status(400).json({ message: error.message });
+      sendErrorResponse(res, error.message);
     } else {
-      res.status(400).json({ message: "An unknown error occurred" });
+      sendErrorResponse(res, 'An unknown error occurred');
     }
   }
 });

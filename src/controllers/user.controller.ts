@@ -1,5 +1,6 @@
 import express from 'express';
 import { updateUserProfile, getUserDetails } from '../services/userService';
+import { sendSuccessResponse, sendErrorResponse } from '../utils/response';
 
 const router = express.Router();
 
@@ -10,12 +11,12 @@ router.put('/profile', async (req, res) => {
     const userId = req.body.user.id; // Dapatkan ID pengguna dari token
 
     const result = await updateUserProfile(userId, fullName, position);
-    res.json(result);
+    sendSuccessResponse(res, result);
   } catch (error) {
     if (error instanceof Error) {
-      res.status(400).json({ message: error.message });
+      sendErrorResponse(res, error.message);
     } else {
-      res.status(400).json({ message: 'An unknown error occurred' });
+      sendErrorResponse(res, 'An unknown error occurred');
     }
   }
 });
@@ -23,14 +24,14 @@ router.put('/profile', async (req, res) => {
 // Get User Details
 router.get('/profile', async (req, res) => {
   try {
-    const userId = req.body.user.id; // Dapatkan ID pengguna dari token
+    const userId = req.body.user.id; 
     const userDetails = await getUserDetails(userId);
-    res.json(userDetails);
+    sendSuccessResponse(res, userDetails);
   } catch (error) {
     if (error instanceof Error) {
-      res.status(400).json({ message: error.message });
+      sendErrorResponse(res, error.message);
     } else {
-      res.status(400).json({ message: 'An unknown error occurred' });
+      sendErrorResponse(res, 'An unknown error occurred');
     }
   }
 });

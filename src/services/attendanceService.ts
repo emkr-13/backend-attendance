@@ -7,40 +7,31 @@ export const recordAttendance = async (
   userId: string,
   location: string,
   ipAddress: string,
-  photo: string
+  photoUrl: string // Simpan URL bukan base64
 ) => {
-  try {
-    const userRepository = AppDataSource.getRepository(User);
-    const user = await userRepository.findOneBy({ id: userId });
-    if (!user) throw new Error('User not found');
+  const userRepository = AppDataSource.getRepository(User);
+  const user = await userRepository.findOneBy({ id: userId });
+  if (!user) throw new Error('User not found');
 
-    const attendanceRepository = AppDataSource.getRepository(Attendance);
-    const newAttendance = attendanceRepository.create({
-      location,
-      ipAddress,
-      photo,
-      user,
-    });
+  const attendanceRepository = AppDataSource.getRepository(Attendance);
+  const newAttendance = attendanceRepository.create({
+    location,
+    ipAddress,
+    photo: photoUrl, // Simpan URL
+    user,
+  });
 
-    await attendanceRepository.save(newAttendance);
-    return { message: 'Attendance recorded successfully' };
-  } catch (error) {
-    console.error('Error in recordAttendance:', (error as any).message || error);
-    throw new Error('Failed to record attendance');
-  }
+  await attendanceRepository.save(newAttendance);
+  return { message: 'Attendance recorded successfully' };
 };
 
-// Get attendance report for a user
+// Get attendance report
 export const getAttendanceReport = async (userId: string) => {
-  try {
-    const attendanceRepository = AppDataSource.getRepository(Attendance);
-    const attendances = await attendanceRepository.find({
-      where: { user: { id: userId } },
-      order: { createdAt: 'DESC' },
-    });
-    return attendances;
-  } catch (error) {
-    console.error('Error in getAttendanceReport:',(error as any).message || error);
-    throw new Error('Failed to fetch attendance report');
-  }
+  const attendanceRepository = AppDataSource.getRepository(Attendance);
+  const attendances = await attendanceRepository.find({
+    where: { user: { id: userId } },
+    order: { createdAt: 'DESC' },
+    select: ['id', 'location', 'ipAddress', 'photo', 'createdAt'],
+  });
+  return attendances;
 };
