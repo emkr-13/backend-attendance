@@ -11,7 +11,7 @@ import { IncomingForm } from "formidable";
 const router = express.Router();
 
 // POST /api/attendance - Record attendance with photo upload
-router.post("/", async (req, res) => {
+router.post("/create", async (req, res) => {
   const form = new IncomingForm();
 
   form.parse(req, async (err, fields, files) => {

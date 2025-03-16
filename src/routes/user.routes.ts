@@ -4,7 +4,7 @@ import { sendSuccessResponse, sendErrorResponse } from "../utils/response";
 
 const router = express.Router();
 
-router.put("/profile", async (req, res) => {
+router.post("/update", async (req, res) => {
   try {
     const { fullName, position } = req.body;
     const userId = req.body.user.id;

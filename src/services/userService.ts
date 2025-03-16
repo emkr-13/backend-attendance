@@ -7,6 +7,7 @@ export const updateUserProfile = async (
   fullName: string,
   position: string,
 ) => {
+ 
   const userRepository = AppDataSource.getRepository(User);
   const user = await userRepository.findOneBy({ id: userId });
   if (!user) throw new Error("User not found");
@@ -15,8 +16,10 @@ export const updateUserProfile = async (
   user.fullName = fullName || user.fullName;
   user.position = position || user.position;
 
+
+
   await userRepository.save(user);
-  return { message: "Profile updated successfully", user };
+  return { message: "Profile updated successfully", fullName: user.fullName, position: user.position };
 };
 
 // Get user details
