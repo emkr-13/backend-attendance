@@ -37,7 +37,7 @@ router.post("/create", async (req, res) => {
       const uploadDir = `photo_employee/${userId}`;
       await fs.mkdir(uploadDir, { recursive: true });
       // Pastikan file diunggah
-      console.log("cek", files.photo); // Debugging: Cek struktur files.photo
+      // console.log("cek", files.photo); // Debugging: Cek struktur files.photo
 
       const photoFile = Array.isArray(files.photo) ? files.photo[0] : files.photo;
       if (!photoFile || !photoFile.newFilename) {
