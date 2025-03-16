@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { AppDataSource } from "../data-source";
 import { User } from "../entities/User";
+import { sendSuccessResponse, sendErrorResponse } from "../utils/response";
 
 export const authenticateToken = async (
   req: Request,
@@ -12,7 +13,8 @@ export const authenticateToken = async (
 
   // Periksa apakah header Authorization ada
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    res.status(401).json({ message: "No token provided" });
+    // res.status(401).json({ message: "No token provided" });
+    sendErrorResponse(res, "No token provided", 401);
     return;
   }
 
@@ -29,7 +31,8 @@ export const authenticateToken = async (
     const user = await userRepository.findOneBy({ id: decoded.userId });
 
     if (!user) {
-      res.status(403).json({ message: "Invalid or expired token" });
+      // res.status(403).json({ message: "Invalid or expired token" });
+      sendErrorResponse(res, "Invalid or expired token", 403);
       return;
     }
 
@@ -43,6 +46,7 @@ export const authenticateToken = async (
     } else {
       console.error("JWT Verification Error:", error);
     }
-    res.status(403).json({ message: "Invalid or expired token" });
+    // res.status(403).json({ message: "Invalid or expired token" });
+    sendErrorResponse(res, "Invalid or expired token", 403);
   }
 };
